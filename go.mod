@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/matryer/is v1.4.1
 	github.com/pkg/errors v0.9.1
+	github.com/rogpeppe/go-internal v1.11.0
 	github.com/segmentio/ksuid v1.0.4
 	go.etcd.io/bbolt v1.3.7
 	go.mongodb.org/mongo-driver v1.12.1
@@ -22,4 +23,5 @@ require (
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
 	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
+	golang.org/x/tools v0.1.12 // indirect
 )
