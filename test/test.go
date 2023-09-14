@@ -3,31 +3,41 @@ package test
 import (
 	"context"
 	"fmt"
-	"sort"
 	"testing"
 
 	"github.com/schafer14/sds"
 )
 
-func DoesItWork[A sds.Entity](t *testing.T, ctx context.Context, s sds.Repo[A], save func(string) error) {
+type Entity struct {
+	ID    string `bson:"_id"`
+	Field string
+}
 
-	list := []string{}
-	reversed := []string{}
+func (entity Entity) GetID() string {
+	return entity.ID
+}
 
-	for i := 0; i < 100; i++ {
+func (entity Entity) String() string {
+	return entity.ID
+}
 
+func DoesItWork(t *testing.T, ctx context.Context, s sds.Repo[Entity]) {
+
+	// Save 100 records
+	N := 100
+
+	list := make([]string, N)
+	reversed := make([]string, N)
+
+	for i := 0; i < N; i++ {
 		id := fmt.Sprintf("%.2d", i)
-		list = append(list, id)
-		reversed = append(reversed, id)
-		err := save(id)
+		list[i] = id
+		reversed[N-1-i] = id
+		err := s.Save(ctx, Entity{id, id})
 		if err != nil {
 			t.Errorf("saving item %v : %v", id, err)
 		}
 	}
-
-	sort.Slice(reversed, func(i, j int) bool {
-		return reversed[j] < reversed[i]
-	})
 
 	t.Run("fetches items by id", func(_ *testing.T) {
 		first, err := s.Find(ctx, "00")
