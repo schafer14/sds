@@ -28,6 +28,10 @@ func (w *wrappedEntity) String() string {
 
 func TestBboltDB(t *testing.T) {
 
+	if testing.Short() {
+		t.Skip("file system tests do not run in short mode")
+	}
+
 	t.Parallel()
 	ctx := context.Background()
 	is := is.New(t)
@@ -50,6 +54,10 @@ func TestBboltDB(t *testing.T) {
 }
 
 func TestBboltDBDataStructure(t *testing.T) {
+
+	if testing.Short() {
+		t.Skip("file system tests do not run in short mode")
+	}
 
 	t.Parallel()
 	ctx := context.Background()

@@ -65,7 +65,7 @@ func Edit() int {
 	}
 
 	myData := []byte(`{"Name": "Grace", "Email": "grace@example.com" }`)
-	if _, err := f.Write(myData); err != nil {
+	if _, err := f.WriteAt(myData, 0); err != nil {
 		return 6
 	}
 
