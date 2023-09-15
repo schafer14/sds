@@ -18,7 +18,7 @@ the users input.
 ## Example
 
 ```go
-package examples
+package main
 
 import (
 	"context"

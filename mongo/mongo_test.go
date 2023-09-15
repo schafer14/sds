@@ -6,11 +6,10 @@ import (
 
 	"github.com/matryer/is"
 	"github.com/segmentio/ksuid"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/schafer14/sds"
 	mongoStorage "github.com/schafer14/sds/mongo"
+	mtest "github.com/schafer14/sds/mongo/test"
 	"github.com/schafer14/sds/test"
 )
 
@@ -29,20 +28,20 @@ func (entity *entity) String() string {
 
 func TestMongoDB(t *testing.T) {
 
+	if testing.Short() {
+		t.Skip("docker tests do not run in short mode")
+	}
+
 	t.Parallel()
 	ctx := context.Background()
 	is := is.New(t)
-	uri := "mongodb://localhost:27017"
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			t.Fatal(err)
-		}
-	}()
-	coll := client.Database("test").Collection("test_" + ksuid.New().String())
+
+	container := mtest.SetupDatabase(t)
+	t.Cleanup(func() { mtest.TeardownDatabase(t, container) })
+	db, err := mtest.DatabaseTest(t, container)
+	is.NoErr(err)
+
+	coll := db.Collection("test_" + ksuid.New().String())
 
 	store, err := mongoStorage.New[*entity](coll)
 	is.NoErr(err)
@@ -58,20 +57,19 @@ func TestMongoDB(t *testing.T) {
 
 func TestMongoDBDataStructure(t *testing.T) {
 
+	if testing.Short() {
+		t.Skip("docker tests do not run in short mode")
+	}
+
 	t.Parallel()
 	ctx := context.Background()
 	is := is.New(t)
-	uri := "mongodb://localhost:27017"
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			t.Fatal(err)
-		}
-	}()
-	coll := client.Database("test").Collection("test_" + ksuid.New().String())
+
+	container := mtest.SetupDatabase(t)
+	t.Cleanup(func() { mtest.TeardownDatabase(t, container) })
+	db, err := mtest.DatabaseTest(t, container)
+	is.NoErr(err)
+	coll := db.Collection("test_" + ksuid.New().String())
 
 	store, err := mongoStorage.New[*entity](coll)
 	is.NoErr(err)

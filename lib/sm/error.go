@@ -6,11 +6,11 @@ type ErrorList struct {
 	list []error
 }
 
-func (e ErrorList) Error() string {
+func (e *ErrorList) Error() string {
 	return fmt.Sprintf("%d errors processing state machine : %v", len(e.list), e.list)
 }
 
-func (e ErrorList) add(err error) {
+func (e *ErrorList) add(err error) {
 	if e.list == nil {
 		e.list = []error{}
 	}
@@ -18,7 +18,7 @@ func (e ErrorList) add(err error) {
 	e.list = append(e.list, err)
 }
 
-func (e ErrorList) err() error {
+func (e *ErrorList) err() error {
 	if e.list == nil {
 		return nil
 	}

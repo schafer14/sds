@@ -36,5 +36,13 @@ plan to use. They are in the [how to](./wiki/how-tos) directory.
 Please feel free to raise issues with any feedback. Questions, suggestions, 
 improvements, and comments are all welcome.
 
+## Run the tests
 
+The full test requires docker to be installed. Docker images for the databases
+will be started, and tests take a few seconds to run. 
 
+If you do not wish to have these tests included use the `-short` flag.
+
+```console
+go test ./... -count=1 -short
+```
