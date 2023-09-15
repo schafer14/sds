@@ -180,6 +180,14 @@ func DoesItWork[A sds.Entity](t *testing.T, ctx context.Context, s sds.Repo[A], 
 
 	})
 
+	t.Run("overwriting an existing item", func(t *testing.T) {
+
+		err := save(list[1])
+		if err != nil {
+			t.Errorf("over writing item : %v", err)
+		}
+	})
+
 }
 
 func neq[A sds.Entity](as []string, bs []A) bool {
