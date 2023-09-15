@@ -35,7 +35,17 @@ func (s *service[A]) Find(ctx context.Context, id string) (A, error) {
 }
 
 func (s *service[A]) Save(ctx context.Context, item A) error {
-	if _, err := s.db.InsertOne(ctx, item); err != nil {
+	_, err := s.Find(ctx, item.GetID())
+	if err != nil && mongo.ErrNoDocuments != err {
+		return err
+	} else if err != nil {
+		if _, err := s.db.InsertOne(ctx, item); err != nil {
+			return errors.Wrap(err, "saving item")
+		}
+
+	}
+
+	if _, err := s.db.ReplaceOne(ctx, bson.D{{Key: "_id", Value: item.GetID()}}, item); err != nil {
 		return errors.Wrap(err, "saving item")
 	}
 
